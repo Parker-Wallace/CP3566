@@ -12,8 +12,8 @@ import java.util.Objects;
 
 public class BookDatabaseManager {
     public static final String DB_NAME = "/Books";
-    public static List<Book> books;
-    public static List<Author> authors;
+    private final List<Book> books;
+    private final List<Author> authors;
 
     public BookDatabaseManager() throws SQLException {
         books = new ArrayList<>();
@@ -110,8 +110,7 @@ public class BookDatabaseManager {
             Connection conn = DriverManager.getConnection(
                     DBProperties.DATABASE_URL + DB_NAME, DBProperties.DATABASE_USER, DBProperties.DATABASE_PASSWORD);
             PreparedStatement ps = conn.prepareStatement(Query);
-            ResultSet rs = ps.executeQuery();
-            return rs;
+            return ps.executeQuery();
     }
         catch (SQLException e) {
             e.printStackTrace();
@@ -132,7 +131,7 @@ public void executeQuery(String Query) {
     }
 }
 
-public void resetDatabase() {
+    public void resetDatabase() {
     List<String> Queries = new ArrayList<>();
     Queries.add("DROP TABLE IF EXISTS authorISBN");
     Queries.add("DROP TABLE IF EXISTS titles");
@@ -195,4 +194,11 @@ public void resetDatabase() {
     }
 }
 
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public List<Author> getAuthors() {
+        return authors;
+    }
 }

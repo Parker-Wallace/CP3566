@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.Scanner;
 
 public class BookApplication {
-    private static Scanner scanner = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws SQLException {
         
@@ -55,7 +55,7 @@ public class BookApplication {
         }
 
         private static void printAllBooks(BookDatabaseManager db) throws SQLException {
-            for (Book book: db.books) {
+            for (Book book: db.getBooks()) {
                 System.out.println("Title: " + book.getTitle());
                 System.out.println("Author(s):");
                 for (Author author: book.getAuthorList()) {
@@ -65,7 +65,7 @@ public class BookApplication {
             }
     }
     private static void printAllAuthors(BookDatabaseManager db) throws SQLException {
-        for (Author author : db.authors) {
+        for (Author author : db.getAuthors()) {
             System.out.println("Name: " + author.getName());
             System.out.println("Authored Titles:");
             for (Book book: author.getAuthoredBooks()) {
@@ -80,7 +80,7 @@ public class BookApplication {
         System.out.println("[2] Author");
         int choice = scanner.nextInt();
         if (choice == 1) {
-            editAuthorAttributes(db);
+            editBookAttributes(db);
         }
         else if (choice == 2) {
             editAuthorAttributes(db);
@@ -93,13 +93,13 @@ public class BookApplication {
         // User Selects a book to edit
         System.out.println("Select a book to edit:");
         int i = 0;
-        for (Book book: db.books) {
+        for (Book book: db.getBooks()) {
             System.out.printf("[%d] %s%n", i++, book.getTitle());
         }
 
         // Lists the current attributes from the db
-        Integer selectedBookIndex = scanner.nextInt();
-        Book choice = db.books.get(selectedBookIndex);
+        int selectedBookIndex = scanner.nextInt();
+        Book choice = db.getBooks().get(selectedBookIndex);
         System.out.printf("Attributes for %s:%n", choice.getTitle() );
         System.out.println("Title: " + choice.getTitle());
         System.out.println("Edition number:" + choice.getEditionumber());
@@ -107,40 +107,39 @@ public class BookApplication {
         
         // Get updated information
         System.out.println("<------------>");
-        System.out.println("enter new title:");
+        System.out.println("enter new title: ");
         String newTitle = scanner.next();
-        System.out.println("enter new Edition Number:");
+        System.out.println("enter new Edition Number: ");
         String newEditionNumber = scanner.next();
         System.out.println("enter new Copyright: ");
         String newCopyright = scanner.next();
-        choice.setTitle(newTitle);
-        choice.setEditionumber(newEditionNumber);
-        choice.setCopyright(newCopyright);
-        // update db
-        // update book attributes
-        // syncronize the book db
+        db.updateDatabase("titles","title", newTitle, "isbn", choice.getIsbn());
+        db.updateDatabase("titles","editionNumber", newEditionNumber, "isbn", choice.getIsbn());
+        db.updateDatabase("titles","copyright", newCopyright, "isbn", choice.getIsbn());
+
     }
     public static void editAuthorAttributes(BookDatabaseManager db) throws SQLException {
 
         // User Selects an author to edit
         System.out.println("Select an author to edit:");
         int i = 0;
-        for (Author author: db.authors) {
+        for (Author author: db.getAuthors()) {
             System.out.printf("[%d] %s%n", i++, author.getName());
         }
 
         // Lists the current attributes from the db
-        Integer selectedAuthorIndex = scanner.nextInt();
-        Author choice = db.authors.get(selectedAuthorIndex);
+        int selectedAuthorIndex = scanner.nextInt();
+        scanner.nextLine(); // consume newline character
+        Author choice = db.getAuthors().get(selectedAuthorIndex);
         System.out.printf("Attributes for %s:%n", choice.getName() );
         System.out.println("Full name: " + choice.getName());
 
         // Get updated information
         System.out.println("<------------>");
         System.out.println("enter new firstName: ");
-        String newFirstName = scanner.next();
+        String newFirstName = scanner.nextLine();
         System.out.println("enter new lastName: ");
-        String newLastName = scanner.next();
+        String newLastName = scanner.nextLine();
         // upd
         db.updateDatabase("authors", "firstName", newFirstName, "authorID", choice.getID());
         db.updateDatabase("authors", "lastName", newLastName, "authorID", choice.getID());

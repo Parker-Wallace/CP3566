@@ -13,6 +13,8 @@ public class Book {
         public Book(String title, String isbn, String editionumber, String copyright) {
             this.title = title;
             this.isbn = isbn;
+            this.editionumber = editionumber;
+            this.copyright = copyright;
             this.authorList = new ArrayList<>();
         }
 
