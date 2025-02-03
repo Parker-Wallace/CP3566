@@ -34,6 +34,9 @@ public class BookApplication {
                     case 5:
                         System.out.println("Exiting program...");
                         return;
+                    case 6:
+                        db.resetDatabase();
+                        break;
                     default:
                         System.out.println("Invalid choice. Please try again.");
                 }
@@ -48,6 +51,7 @@ public class BookApplication {
             System.out.println("3. Edit a book’s or an author’s attributes");
             System.out.println("4. Add a book to the database for existing or new author(s)");
             System.out.println("5. Quit");
+            System.out.println("6. Reset the database");
         }
 
         private static void printAllBooks(BookDatabaseManager db) throws SQLException {
@@ -70,7 +74,7 @@ public class BookApplication {
         }
     }
     private static void editAttributes(BookDatabaseManager db) throws SQLException {
-        Scanner scanner = new Scanner(System.in);
+
         System.out.println("Select an attribute:");
         System.out.println("[1] Title");
         System.out.println("[2] Author");
@@ -78,15 +82,14 @@ public class BookApplication {
         if (choice == 1) {
             editAuthorAttributes(db);
         }
-        else if (choice == 2) {}
+        else if (choice == 2) {
+            editAuthorAttributes(db);
+        }
         else {}
-        scanner.close();
     }
     private static void addBook() throws SQLException {}
 
     public static void editBookAttributes(BookDatabaseManager db) throws SQLException {
-        scanner = new Scanner(System.in);
-
         // User Selects a book to edit
         System.out.println("Select a book to edit:");
         int i = 0;
@@ -114,16 +117,10 @@ public class BookApplication {
         choice.setEditionumber(newEditionNumber);
         choice.setCopyright(newCopyright);
         // update db
-        scanner.close();
-        
-        
-
-
         // update book attributes
         // syncronize the book db
     }
     public static void editAuthorAttributes(BookDatabaseManager db) throws SQLException {
-        scanner = new Scanner(System.in);
 
         // User Selects an author to edit
         System.out.println("Select an author to edit:");
@@ -145,8 +142,8 @@ public class BookApplication {
         System.out.println("enter new lastName: ");
         String newLastName = scanner.next();
         // upd
-        db.updateDatabase("authors", "firstName", newFirstName, "firstName", choice.getName());
-        scanner.close();
+        db.updateDatabase("authors", "firstName", newFirstName, "authorID", choice.getID());
+        db.updateDatabase("authors", "lastName", newLastName, "authorID", choice.getID());
 
     }
 
