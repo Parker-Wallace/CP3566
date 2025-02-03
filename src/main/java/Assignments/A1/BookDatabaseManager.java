@@ -1,5 +1,6 @@
 package Assignments.A1;
 
+import com.sun.jna.WString;
 import org.example.JDBC.DBProperties;
 
 import javax.xml.transform.Result;
@@ -65,6 +66,9 @@ public class BookDatabaseManager {
         }
     }
 
+    public void updateDatabase(String table, String column, String updatedValue, String oldValueColumn, String oldValue) throws SQLException {
+        String Query = "Update %s set %s = %s where %s = %s";
+    }
 
     public void addBook(Book book) {}
 
@@ -76,7 +80,6 @@ public class BookDatabaseManager {
     String Query = "SELECT t.isbn, t.title, t.editionNumber, t.copyright, CONCAT(a.FirstName, ' ', a.lastName) AS 'Author Name' FROM titles t JOIN authorisbn ai ON t.isbn = ai.isbn JOIN authors a ON ai.authorID = a.authorID;";
     return executeSelectQuery(Query);
     }
-
     public ResultSet selectAllAuthors() {
         String Query = "Select a.authorID, concat(a.FirstName, \" \", a.lastName) AS \"Author\" FROM authors a";
 
@@ -86,12 +89,10 @@ public class BookDatabaseManager {
         String Query = "SELECT * from titles";
         return executeSelectQuery(Query);
     }
-
     private ResultSet selectIntermediary(){
         String Query = "SELECT * from authorisbn";
         return executeSelectQuery(Query);
     }
-
     public ResultSet selectIndividualRecord(String table, String comparator, String value ) {
         String Query = "SELECT * FROM" + table + " WHERE " + comparator + " = '" + value + "'";
         return executeSelectQuery(Query);
@@ -102,8 +103,8 @@ public class BookDatabaseManager {
         try{
             Connection conn = DriverManager.getConnection(
                     DBProperties.DATABASE_URL + DB_NAME, DBProperties.DATABASE_USER, DBProperties.DATABASE_PASSWORD);
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(Query);
+            PreparedStatement ps = conn.prepareStatement(Query);
+            ResultSet rs = ps.executeQuery();
             return rs;
     }
         catch (SQLException e) {
@@ -118,6 +119,7 @@ public void executeQuery(String Query) {
         Connection conn = DriverManager.getConnection(
                 DBProperties.DATABASE_URL + DB_NAME, DBProperties.DATABASE_USER, DBProperties.DATABASE_PASSWORD);
         Statement stmt = conn.createStatement();
+        stmt.executeQuery(Query);
     }
     catch (SQLException e) {
         e.printStackTrace();

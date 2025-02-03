@@ -144,13 +144,10 @@ public class BookApplication {
         String newFirstName = scanner.next();
         System.out.println("enter new lastName: ");
         String newLastName = scanner.next();
-        // update db
+        // upd
+        db.updateDatabase("authors", "firstName", newFirstName, "firstName", choice.getName());
         scanner.close();
 
-
-
-
-        // upd
     }
 
 }

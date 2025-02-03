@@ -21,14 +21,20 @@ public class Author {
         }
     }
 
-
-
     public List<Book> getAuthoredBooks() {
         return authoredBooks;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getFirstName() {
+        return name.split(" ")[0];
+    }
+
+    public String getLastName() {
+        return name.split(" ")[1];
     }
 
     public String getID() {
