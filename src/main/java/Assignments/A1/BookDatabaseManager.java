@@ -12,59 +12,9 @@ import java.util.Objects;
 
 public class BookDatabaseManager {
     public static final String DB_NAME = "/Books";
-    private final List<Book> books;
-    private final List<Author> authors;
 
-    public BookDatabaseManager() throws SQLException {
-        books = new ArrayList<>();
-        authors = new ArrayList<>();
-        ResultSet allBooks = selectAllBook();
-        ResultSet Linking = selectIntermediary();
-        ResultSet allAuthors = selectAllAuthors();
 
-        // Creates a new book object for each entry in the Db
-        while (allBooks.next()) {
-            Book book = new Book(
-                    allBooks.getString("title"),
-                    allBooks.getString("isbn"),
-                    allBooks.getString("editionNumber"),
-                    allBooks.getString("copyright"));
-            books.add(book);
-        }
 
-        // Creates a new Author object for each entry in the Db
-        while (allAuthors.next()) {
-            Author author = new Author(
-                    allAuthors.getString("authorID"),
-                    allAuthors.getString("Author")
-            );
-            authors.add(author);
-        }
-
-        // Creates relationships between authors and books using an foreign key relationship present in the Db
-        while (Linking.next()) {
-            String ISBN = Linking.getString("isbn");
-            String authorID = Linking.getString("authorID");
-
-            // using Array.stream() to find the book object with the matching Isbn
-            Book book = books.stream()
-                    .filter(n -> ISBN.equals(n.getIsbn()))
-                    .findFirst()
-                    .orElse(null);
-
-            // using Array.stream() to find the author object with the matching authorID
-            Author author = authors.stream()
-                            .filter(n -> authorID.equals(n.getID()))
-                            .findFirst()
-                            .orElse(null);
-
-            assert book != null;
-            book.addBookAuthor(author);
-            assert author != null;
-            author.addAuthoredBook(book);
-
-        }
-    }
 
     public void updateDatabase(String table,
                                String column,
@@ -95,7 +45,7 @@ public class BookDatabaseManager {
         String Query = "SELECT * from titles";
         return executeSelectQuery(Query);
     }
-    private ResultSet selectIntermediary(){
+    public ResultSet selectIntermediary(){
         String Query = "SELECT * from authorisbn";
         return executeSelectQuery(Query);
     }
@@ -194,11 +144,4 @@ public void executeQuery(String Query) {
     }
 }
 
-    public List<Book> getBooks() {
-        return books;
-    }
-
-    public List<Author> getAuthors() {
-        return authors;
-    }
 }
