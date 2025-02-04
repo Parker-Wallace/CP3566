@@ -35,7 +35,8 @@ public class Library {
         while (allAuthors.next()) {
             Author author = new Author(
                     allAuthors.getString("authorID"),
-                    allAuthors.getString("Author")
+                    allAuthors.getString("firstName"),
+                    allAuthors.getString("lastName")
             );
             authors.add(author);
         }

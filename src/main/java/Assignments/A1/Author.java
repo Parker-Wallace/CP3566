@@ -5,13 +5,15 @@ import java.util.List;
 
 public class Author {
     private List<Book> authoredBooks;
-    private String name;
+    private String firstName;
+    private String lastName;
     private String ID;
 
 
-    public Author(String ID, String name) {
+    public Author(String ID, String firstName, String lastName) {
         this.ID = ID;
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.authoredBooks = new ArrayList<Book>();
     }
 
@@ -25,19 +27,27 @@ public class Author {
         return authoredBooks;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public String getFirstName() {
-        return name.split(" ")[0];
+        return firstName;
     }
 
     public String getLastName() {
-        return name.split(" ")[1];
+        return lastName;
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 
     public String getID() {
         return ID;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

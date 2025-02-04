@@ -33,11 +33,11 @@ public class BookDatabaseManager {
 
 
     public ResultSet selectAll() {
-    String Query = "SELECT t.isbn, t.title, t.editionNumber, t.copyright, CONCAT(a.FirstName, ' ', a.lastName) AS 'Author Name' FROM titles t JOIN authorisbn ai ON t.isbn = ai.isbn JOIN authors a ON ai.authorID = a.authorID;";
+    String Query = "SELECT t.isbn, t.title, t.editionNumber, t.copyright, a.FirstName,  a.lastName FROM titles t JOIN authorisbn ai ON t.isbn = ai.isbn JOIN authors a ON ai.authorID = a.authorID;";
     return executeSelectQuery(Query);
     }
     public ResultSet selectAllAuthors() {
-        String Query = "Select a.authorID, concat(a.FirstName, \" \", a.lastName) AS \"Author\" FROM authors a";
+        String Query = "Select a.authorID, a.FirstName,  a.lastName FROM authors a";
 
         return executeSelectQuery(Query);
     }

@@ -62,7 +62,7 @@ public class BookApplication {
                 System.out.println("Title: " + book.getTitle());
                 System.out.println("Author(s):");
                 for (Author author: book.getAuthorList()) {
-                    System.out.println("\t" + author.getName());
+                    System.out.println("\t" + author.getFullName());
                 }
 
             }
@@ -70,7 +70,7 @@ public class BookApplication {
 
     private static void printAllAuthors(Library library) throws SQLException {
         for (Author author : library.getAuthors()) {
-            System.out.println("Name: " + author.getName());
+            System.out.println("Name: " + author.getFullName());
             System.out.println("Authored Titles:");
             for (Book book: author.getAuthoredBooks()) {
                 System.out.println("\t" + book.getTitle());
@@ -130,15 +130,15 @@ public class BookApplication {
         System.out.println("Select an author to edit:");
         int i = 0;
         for (Author author: library.getAuthors()) {
-            System.out.printf("[%d] %s%n", i++, author.getName());
+            System.out.printf("[%d] %s%n", i++, author.getFullName());
         }
 
         // Lists the current attributes from the db
         int selectedAuthorIndex = scanner.nextInt();
         scanner.nextLine(); // consume newline character
         Author choice = library.getAuthors().get(selectedAuthorIndex);
-        System.out.printf("Attributes for %s:%n", choice.getName() );
-        System.out.println("Full name: " + choice.getName());
+        System.out.printf("Attributes for %s:%n", choice.getFirstName());
+        System.out.println("Full name: " + choice.getFullName());
 
         // Get updated information
         System.out.println("<------------>");
@@ -146,9 +146,12 @@ public class BookApplication {
         String newFirstName = scanner.nextLine();
         System.out.println("enter new lastName: ");
         String newLastName = scanner.nextLine();
-        // upd
+        library.getAuthors().get(library.getAuthors().indexOf(choice)).setFirstName(newFirstName);
+        library.getAuthors().get(library.getAuthors().indexOf(choice)).setLastName(newLastName);
+
         db.updateDatabase("authors", "firstName", newFirstName, "authorID", choice.getID());
         db.updateDatabase("authors", "lastName", newLastName, "authorID", choice.getID());
+
 
     }
 
