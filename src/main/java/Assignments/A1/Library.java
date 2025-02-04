@@ -74,5 +74,10 @@ public class Library {
         return authors;
     }
 
+    public void editAuthor(int indexOfAuthor, String newFirstName, String newLastName) {
+        authors.get(indexOfAuthor).setFirstName(newFirstName);
+        authors.get(indexOfAuthor).setLastName(newLastName);
+    }
+
 
 }
