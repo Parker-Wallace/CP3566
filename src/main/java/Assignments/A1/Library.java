@@ -74,10 +74,35 @@ public class Library {
         return authors;
     }
 
-    public void editAuthor(int indexOfAuthor, String newFirstName, String newLastName) {
-        authors.get(indexOfAuthor).setFirstName(newFirstName);
-        authors.get(indexOfAuthor).setLastName(newLastName);
+    public void editAuthor(BookDatabaseManager db, int indexOfAuthor, String newFirstName, String newLastName) throws SQLException {
+        Author author = authors.get(indexOfAuthor);
+        author.setFirstName(newFirstName);
+        author.setLastName(newLastName);
+        db.updateDatabase("authors", "firstName", newFirstName, "authorID", authors.get(indexOfAuthor).getID());
+        db.updateDatabase("authors", "lastName", newLastName, "authorID", authors.get(indexOfAuthor).getID());
     }
 
+    public void editBook(BookDatabaseManager db, int indexOfBook, String newTitle, String newEditionNumber, String newCopyright) throws SQLException {
+        Book book = books.get(indexOfBook);
+        book.setTitle(newTitle);
+        book.setCopyright(newCopyright);
+        book.setEditionumber(newEditionNumber);
+        db.updateDatabase("titles", "title", newTitle, "isbn", book.getIsbn());
+        db.updateDatabase("titles", "editionNumber", newEditionNumber, "isbn", book.getIsbn());
+        db.updateDatabase("titles", "copyright", newCopyright, "isbn", book.getIsbn());
 
-}
+    }
+
+    public void addBook (BookDatabaseManager db,String newISBN,  String newTitle, String newEditionNumber, String newCpoyright) throws SQLException {
+// isbn needs to be 10 chars long
+        Book book = new Book(newISBN, newTitle, newEditionNumber, newCpoyright);
+    }
+
+    public void addAuthor (BookDatabaseManager db, ArrayList<Book> authoredBooks, String firstName, String lastName) throws SQLException {
+        Author author = new Author(String.valueOf(authors.size() + 1), firstName,lastName);
+        for (Book book : authoredBooks) {
+            author.addAuthoredBook(book);
+        }
+
+    }
+}}

@@ -32,7 +32,7 @@ public class BookApplication {
                         editAttributes(library);
                         break;
                     case 4:
-                        addBook();
+                        addAuthor(library);
                         break;
                     case 5:
                         System.out.println("Exiting program...");
@@ -118,9 +118,7 @@ public class BookApplication {
         String newEditionNumber = scanner.nextLine();
         System.out.println("enter new Copyright: ");
         String newCopyright = scanner.nextLine();
-        db.updateDatabase("titles","title", newTitle, "isbn", choice.getIsbn());
-        db.updateDatabase("titles","editionNumber", newEditionNumber, "isbn", choice.getIsbn());
-        db.updateDatabase("titles","copyright", newCopyright, "isbn", choice.getIsbn());
+        library.editBook(db, selectedBookIndex, newTitle, newEditionNumber, newCopyright);
 
     }
 
@@ -137,8 +135,7 @@ public class BookApplication {
         int selectedAuthorIndex = scanner.nextInt();
         scanner.nextLine(); // consume newline character
         Author choice = library.getAuthors().get(selectedAuthorIndex);
-        System.out.printf("Attributes for %s:%n", choice.getFirstName());
-        System.out.println("Full name: " + choice.getFullName());
+        System.out.printf("Attributes for %s:%n", choice.getFirstName() + "\nFull name: " + choice.getFullName());
 
         // Get updated information
         System.out.println("<------------>");
@@ -146,13 +143,7 @@ public class BookApplication {
         String newFirstName = scanner.nextLine();
         System.out.println("enter new lastName: ");
         String newLastName = scanner.nextLine();
-        library.getAuthors().get(library.getAuthors().indexOf(choice)).setFirstName(newFirstName);
-        library.getAuthors().get(library.getAuthors().indexOf(choice)).setLastName(newLastName);
-
-        db.updateDatabase("authors", "firstName", newFirstName, "authorID", choice.getID());
-        db.updateDatabase("authors", "lastName", newLastName, "authorID", choice.getID());
-
-
+        library.editAuthor(db, selectedAuthorIndex, newFirstName, newLastName);
     }
 
     public static void addAuthor(Library library) throws SQLException {
@@ -162,30 +153,39 @@ public class BookApplication {
         String lastName = scanner.nextLine();
 
         List<Book> authoredBooks = new ArrayList<>();
-        while (true){
+        while (true) {
             System.out.println("Enter Authored book ID:");
             System.out.println("[0] Finish Selection");
-        for (int i = 0; i < library.getBooks().size() - 1; i++) {
-            if (authoredBooks.contains(library.getBooks().get(i))) {
-             break;
+
+            for (int i = 0; i < library.getBooks().size(); i++) {
+                if (!authoredBooks.contains(library.getBooks().get(i))) {
+                    System.out.println("[" + (i + 1) + "] " + library.getBooks().get(i).getTitle());
+                }
             }
-            else {
-                System.out.println("[" + (i + 1) + "] " + library.getBooks().get(i).getTitle());
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            if (choice == 0) {
+                return;
+            }
+
+            if (choice > 0 && choice <= library.getBooks().size()) {
+                if (!authoredBooks.contains(library.getBooks().get(choice - 1))) {
+                    System.out.println(library.getBooks().get(choice - 1).getTitle() + " added successfully.");
+                    authoredBooks.add(library.getBooks().get(choice - 1));
+                } else {
+                    System.out.println("Book is already added.");
+                }
+            } else {
+                System.out.println("Invalid selection. Please try again.");
             }
         }
-        int choice = scanner.nextInt();
-        if (choice == 0) {
-            return;
-        }
-        else if (choice >= library.getBooks().size() && choice > 1 ) {
-            // add the book tp the list
-            authoredBooks.add(library.getBooks().get(choice - 1));
-        }
-        else {break;}
-        }
+        // create author then add books
     }
 
-    public static void addBook() throws SQLException {}
+
+        public static void addBook() throws SQLException {}
 }
 
 
