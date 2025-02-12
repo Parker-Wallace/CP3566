@@ -185,7 +185,46 @@ public class BookApplication {
     }
 
 
-        public static void addBook() throws SQLException {}
+    public static void addBook(Library library) throws SQLException {
+        System.out.println("Enter book title:");
+        String title = scanner.nextLine();
+        System.out.println("Enter book ISBN:");
+        String isbn = scanner.nextLine();
+
+        List<Author> bookAuthors = new ArrayList<>();
+        while (true) {
+            System.out.println("Select an author for this book:");
+            System.out.println("[0] Finish Selection");
+
+            for (int i = 0; i < library.getAuthors().size(); i++) {
+                if (!bookAuthors.contains(library.getAuthors().get(i))) {
+                    System.out.println("[" + (i + 1) + "] " + library.getAuthors().get(i).getFirstName() + " " + library.getAuthors().get(i).getLastName());
+                }
+            }
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            if (choice == 0) {
+                break;
+            }
+
+            if (choice > 0 && choice <= library.getAuthors().size()) {
+                if (!bookAuthors.contains(library.getAuthors().get(choice - 1))) {
+                    System.out.println(library.getAuthors().get(choice - 1).getFirstName() + " " + library.getAuthors().get(choice - 1).getLastName() + " added successfully.");
+                    bookAuthors.add(library.getAuthors().get(choice - 1));
+                } else {
+                    System.out.println("Author is already added.");
+                }
+            } else {
+                System.out.println("Invalid selection. Please try again.");
+            }
+        }
+
+        Book newBook = new Book(title, isbn, bookAuthors);
+        library.addBook(newBook);
+        System.out.println("Book added successfully.");
+    }
 }
 
 
