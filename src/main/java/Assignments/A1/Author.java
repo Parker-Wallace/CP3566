@@ -11,7 +11,7 @@ public class Author {
     private List<Book> authoredBooks;
     private String firstName;
     private String lastName;
-    private String ID;
+    private int ID;
 
     /**
      * constructor method for the author class.
@@ -19,7 +19,7 @@ public class Author {
      * @param firstName The first name of this author.
      * @param lastName The last name of this author.
      */
-    public Author(String ID, String firstName, String lastName) {
+    public Author(int ID, String firstName, String lastName) {
         this.ID = ID;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -72,7 +72,7 @@ public class Author {
      * Getter method for this authors ID.
      * @return This authors ID.
      */
-    public String getID() {
+    public int getID() {
         return ID;
     }
 
