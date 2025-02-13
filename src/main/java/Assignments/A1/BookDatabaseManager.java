@@ -1,17 +1,13 @@
 package Assignments.A1;
 
-import com.sun.jna.WString;
-import org.example.JDBC.DBProperties;
-
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
+
+import Assignments.DBProperties;
 
 public class BookDatabaseManager {
-    public static final String DB_NAME = "/Books";
+    public static final String DB_NAME = "/library";
 
 
 
@@ -26,18 +22,42 @@ public class BookDatabaseManager {
         executeQuery(Query);
     }
 
-    public void addBook(Book book) {}
+    public void addBook(Book book) {
+        String insertBookQueryString = String.format("""
+                INSERT INTO titles
+                VALUES ('%s', '%s', '%s', '%s');
+                """,
+                book.getIsbn(),
+                book.getTitle(),
+                book.getCopyright(),
+                book.getEditionumber()
+                );
+        executeQuery(insertBookQueryString);
+        for (Author author : book.getAuthorList()) {
+            String insertBookAuthorRelationshipStringQuery = String.format("""
+                    INSERT INTO authorISBN
+                    VALUES (%s, %s);
+                    """,
+                    author.getID(),
+                    book.getIsbn());
+            executeQuery(insertBookAuthorRelationshipStringQuery);
+        }
+    }
 
 
-    public void addAuthor(Author author) {}
+    public void addAuthor(Author author) throws SQLException {
+        String insertAuthorQueryString = String.format("INSERT INTO authors (firstName, lastName) values ('%s','%s')", author.getFirstName(), author.getLastName());
+        executeQuery(insertAuthorQueryString);
+    }
+    
 
 
     public ResultSet selectAll() {
-    String Query = "SELECT t.isbn, t.title, t.editionNumber, t.copyright, a.FirstName,  a.lastName FROM titles t JOIN authorisbn ai ON t.isbn = ai.isbn JOIN authors a ON ai.authorID = a.authorID;";
+    String Query = "SELECT t.isbn, t.title, t.editionNumber, t.copyright, a.FirstName,  a.lastName FROM titles t JOIN authorISBN ai ON t.isbn = ai.isbn JOIN authors a ON ai.authorID = a.authorID;";
     return executeSelectQuery(Query);
     }
     public ResultSet selectAllAuthors() {
-        String Query = "Select a.authorID, a.FirstName,  a.lastName FROM authors a";
+        String Query = "Select * FROM authors a";
 
         return executeSelectQuery(Query);
     }
@@ -46,7 +66,7 @@ public class BookDatabaseManager {
         return executeSelectQuery(Query);
     }
     public ResultSet selectIntermediary(){
-        String Query = "SELECT * from authorisbn";
+        String Query = "SELECT * from authorISBN";
         return executeSelectQuery(Query);
     }
     public ResultSet selectIndividualRecord(String table, String comparator, String value ) {
