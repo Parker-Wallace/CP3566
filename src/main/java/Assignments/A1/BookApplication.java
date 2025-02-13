@@ -1,8 +1,4 @@
 package Assignments.A1;
-
-import org.example.JDBC.DBProperties;
-
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +7,6 @@ import java.util.Scanner;
 public class BookApplication {
     private static final Scanner scanner = new Scanner(System.in);
     private static final BookDatabaseManager db = new BookDatabaseManager();
-
 
     public static void main(String[] args) throws SQLException {
         Library library = new Library(db);
@@ -32,7 +27,7 @@ public class BookApplication {
                         editAttributes(library);
                         break;
                     case 4:
-                        addAuthor(library);
+                        addBook(library);
                         break;
                     case 5:
                         System.out.println("Exiting program...");
@@ -146,73 +141,57 @@ public class BookApplication {
         library.editAuthor(db, selectedAuthorIndex, newFirstName, newLastName);
     }
 
-    public static void addAuthor(Library library) throws SQLException {
-        System.out.println("input author first name:");
-        String firstName = scanner.nextLine();
-        System.out.println("input author last name:");
-        String lastName = scanner.nextLine();
-
-        List<Book> authoredBooks = new ArrayList<>();
-        while (true) {
-            System.out.println("Enter Authored book ID:");
-            System.out.println("[0] Finish Selection");
-
-            for (int i = 0; i < library.getBooks().size(); i++) {
-                if (!authoredBooks.contains(library.getBooks().get(i))) {
-                    System.out.println("[" + (i + 1) + "] " + library.getBooks().get(i).getTitle());
-                }
-            }
-
-            int choice = scanner.nextInt();
-            scanner.nextLine();
-
-            if (choice == 0) {
-                return;
-            }
-
-            if (choice > 0 && choice <= library.getBooks().size()) {
-                if (!authoredBooks.contains(library.getBooks().get(choice - 1))) {
-                    System.out.println(library.getBooks().get(choice - 1).getTitle() + " added successfully.");
-                    authoredBooks.add(library.getBooks().get(choice - 1));
-                } else {
-                    System.out.println("Book is already added.");
-                }
-            } else {
-                System.out.println("Invalid selection. Please try again.");
-            }
-        }
-        // create author then add books
-    }
-
 
     public static void addBook(Library library) throws SQLException {
+        // Get the new book information
         System.out.println("Enter book title:");
         String title = scanner.nextLine();
         System.out.println("Enter book ISBN:");
         String isbn = scanner.nextLine();
-
+        System.out.println("Enter book edition number:");
+        String editionNumber = scanner.nextLine();
+        System.out.println("Enter book copyright:");
+        String copyRight = scanner.nextLine();
+        Book book = new Book(title, isbn, editionNumber, copyRight);
+        // List authors of the new book
         List<Author> bookAuthors = new ArrayList<>();
         while (true) {
             System.out.println("Select an author for this book:");
             System.out.println("[0] Finish Selection");
-
-            for (int i = 0; i < library.getAuthors().size(); i++) {
+            System.out.println("[1] Add New Author");
+    
+            for (int i = 0; i < library.getAuthors().size(); i++) { //Lists all authors that have **not** been selected
                 if (!bookAuthors.contains(library.getAuthors().get(i))) {
-                    System.out.println("[" + (i + 1) + "] " + library.getAuthors().get(i).getFirstName() + " " + library.getAuthors().get(i).getLastName());
+                    System.out.println("[" + (i + 2) + "] " + library.getAuthors().get(i).getFirstName() + " " + library.getAuthors().get(i).getLastName());
                 }
             }
-
+    
             int choice = scanner.nextInt();
+            int choiceAuthorIndex = (choice - 2);
             scanner.nextLine();
-
+    
             if (choice == 0) {
                 break;
             }
+    
+            if (choice == 1) {
+                // Create a new author
+                System.out.println("Enter the first name of the new author:");
+                String firstName = scanner.nextLine();
+                System.out.println("Enter the last name of the new author:");
+                String lastName = scanner.nextLine();
+    
+                Author newAuthor = new Author(library.getAuthors().size() +1 , firstName, lastName);
+                newAuthor.addAuthoredBook(book);
+                library.addAuthor(db, newAuthor);
+                bookAuthors.add(newAuthor);
+                System.out.println("New author " + firstName + " " + lastName + " added successfully.");
 
-            if (choice > 0 && choice <= library.getAuthors().size()) {
-                if (!bookAuthors.contains(library.getAuthors().get(choice - 1))) {
-                    System.out.println(library.getAuthors().get(choice - 1).getFirstName() + " " + library.getAuthors().get(choice - 1).getLastName() + " added successfully.");
-                    bookAuthors.add(library.getAuthors().get(choice - 1));
+            } else if (choice > 1 && choice <= library.getAuthors().size() + 1) {
+                if (!bookAuthors.contains(library.getAuthors().get(choiceAuthorIndex))) {
+                    System.out.println(library.getAuthors().get(choiceAuthorIndex).getFirstName() + " " + library.getAuthors().get(choiceAuthorIndex).getLastName() + " added successfully.");
+                    library.getAuthors().get(choiceAuthorIndex).addAuthoredBook(book);
+                    bookAuthors.add(library.getAuthors().get(choiceAuthorIndex));
                 } else {
                     System.out.println("Author is already added.");
                 }
@@ -220,11 +199,19 @@ public class BookApplication {
                 System.out.println("Invalid selection. Please try again.");
             }
         }
+    
+        for (Author author : bookAuthors ) {
+            book.addBookAuthor(author);    
+        }
+        library.addBook(db, book);
+    
 
-        Book newBook = new Book(title, isbn, bookAuthors);
-        library.addBook(newBook);
-        System.out.println("Book added successfully.");
+        // Uncomment and implement the following to create a new book and add it to the library
+        // Book newBook = new Book(title, isbn, bookAuthors);
+        // library.addBook(newBook);
+        // System.out.println("Book added successfully.");
     }
+    
 }
 
 
