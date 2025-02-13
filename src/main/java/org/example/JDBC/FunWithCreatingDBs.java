@@ -1,6 +1,4 @@
-package org.example.JDBC.SimpleExamples;
-
-import org.example.JDBC.DBProperties;
+package org.example.JDBC;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
