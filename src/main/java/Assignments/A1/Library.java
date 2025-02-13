@@ -34,7 +34,7 @@ public class Library {
         // Creates a new Author object for each entry in the Db
         while (allAuthors.next()) {
             Author author = new Author(
-                    allAuthors.getString("authorID"),
+                    Integer.parseInt(allAuthors.getString("authorID")),
                     allAuthors.getString("firstName"),
                     allAuthors.getString("lastName")
             );
@@ -44,7 +44,7 @@ public class Library {
         // Creates relationships between authors and books using an foreign key relationship present in the Db
         while (Linking.next()) {
             String ISBN = Linking.getString("isbn");
-            String authorID = Linking.getString("authorID");
+            int authorID = Integer.parseInt(Linking.getString("authorID"));
 
             // using Array.stream() to find the book object with the matching Isbn
             Book book = books.stream()
@@ -54,7 +54,7 @@ public class Library {
 
             // using Array.stream() to find the author object with the matching authorID
             Author author = authors.stream()
-                    .filter(n -> authorID.equals(n.getID()))
+                    .filter(n -> authorID == (n.getID()))
                     .findFirst()
                     .orElse(null);
 
@@ -78,8 +78,8 @@ public class Library {
         Author author = authors.get(indexOfAuthor);
         author.setFirstName(newFirstName);
         author.setLastName(newLastName);
-        db.updateDatabase("authors", "firstName", newFirstName, "authorID", authors.get(indexOfAuthor).getID());
-        db.updateDatabase("authors", "lastName", newLastName, "authorID", authors.get(indexOfAuthor).getID());
+        db.updateDatabase("authors", "firstName", newFirstName, "authorID", String.valueOf(authors.get(indexOfAuthor).getID()));
+        db.updateDatabase("authors", "lastName", newLastName, "authorID", String.valueOf(authors.get(indexOfAuthor).getID()));
     }
 
     public void editBook(BookDatabaseManager db, int indexOfBook, String newTitle, String newEditionNumber, String newCopyright) throws SQLException {
@@ -93,16 +93,23 @@ public class Library {
 
     }
 
-    public void addBook (BookDatabaseManager db,String newISBN,  String newTitle, String newEditionNumber, String newCpoyright) throws SQLException {
+    public void addBook (BookDatabaseManager db,Book book) throws SQLException {
 // isbn needs to be 10 chars long
-        Book book = new Book(newISBN, newTitle, newEditionNumber, newCpoyright);
+        this.books.add(book);
+        db.addBook(book);
     }
 
-    public void addAuthor (BookDatabaseManager db, ArrayList<Book> authoredBooks, String firstName, String lastName) throws SQLException {
-        Author author = new Author(String.valueOf(authors.size() + 1), firstName,lastName);
-        for (Book book : authoredBooks) {
-            author.addAuthoredBook(book);
-        }
-
-    }
+    /**
+     * Adds an author to this library and sends the author to the BookDatabaseManager param to add to the database.
+     * @param db The BookDatabaseManager object for handling database syncronization.
+     * @param author The Author object to be added.
+     * @throws SQLException
+     */
+    public void addAuthor (BookDatabaseManager db, 
+                            Author author
+                        ) throws SQLException {
+        this.authors.add(author);
+        db.addAuthor(author);
 }
+}
+
