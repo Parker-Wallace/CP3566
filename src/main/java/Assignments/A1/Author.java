@@ -15,9 +15,10 @@ public class Author {
 
     /**
      * constructor method for the author class.
-     * @param ID The author id as it will exist in the database.
+     * 
+     * @param ID        The author id as it will exist in the database.
      * @param firstName The first name of this author.
-     * @param lastName The last name of this author.
+     * @param lastName  The last name of this author.
      */
     public Author(int ID, String firstName, String lastName) {
         this.ID = ID;
@@ -28,6 +29,7 @@ public class Author {
 
     /**
      * Adds a book to the list of this Authors authored books.
+     * 
      * @param book The book object to add to this authors authored books list.
      */
     public void addAuthoredBook(Book book) {
@@ -38,6 +40,7 @@ public class Author {
 
     /**
      * Getter method for this authors authored books.
+     * 
      * @return A list of book objects this author has authored.
      */
     public List<Book> getAuthoredBooks() {
@@ -46,6 +49,7 @@ public class Author {
 
     /**
      * Getter method for this authors first name.
+     * 
      * @return This authors first name property.
      */
     public String getFirstName() {
@@ -54,6 +58,7 @@ public class Author {
 
     /**
      * Getter method for this authors last name.
+     * 
      * @return This authors last name property.
      */
     public String getLastName() {
@@ -62,6 +67,7 @@ public class Author {
 
     /**
      * Getter method for this authors full name.
+     * 
      * @return This authors full name as first name + last name.
      */
     public String getFullName() {
@@ -70,6 +76,7 @@ public class Author {
 
     /**
      * Getter method for this authors ID.
+     * 
      * @return This authors ID.
      */
     public int getID() {
@@ -78,6 +85,7 @@ public class Author {
 
     /**
      * Setter method for this authors first name.
+     * 
      * @param firstName The new first name for this author.
      */
     public void setFirstName(String firstName) {
@@ -86,6 +94,7 @@ public class Author {
 
     /**
      * Setter method for this authors first name.
+     * 
      * @param lastName The new last name for this author.
      */
     public void setLastName(String lastName) {

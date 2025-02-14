@@ -61,6 +61,7 @@ public class Book {
 
     /**
      * getter method for this book's list of authors
+     * 
      * @return the List<Author> of Authors of this book
      */
     public List<Author> getAuthorList() {
@@ -69,6 +70,7 @@ public class Book {
 
     /**
      * getter method for this book's edition number
+     * 
      * @return the String representation of this book's edition number
      */
     public String getEditionumber() {
@@ -77,6 +79,7 @@ public class Book {
 
     /**
      * getter method for this book's copyright year
+     * 
      * @return the String representation of this book's copyright year
      */
     public String getCopyright() {
@@ -85,6 +88,7 @@ public class Book {
 
     /**
      * setter method for this book's title property
+     * 
      * @param title
      */
     public void setTitle(String title) {
@@ -93,6 +97,7 @@ public class Book {
 
     /**
      * setter method for this books edition number property
+     * 
      * @param editionumber the new edition number for this book
      */
     public void setEditionumber(String editionumber) {
@@ -101,6 +106,7 @@ public class Book {
 
     /**
      * setter method for this books copyright year property
+     * 
      * @param copyright the new copyright year for this book
      */
     public void setCopyright(String copyright) {
@@ -109,6 +115,7 @@ public class Book {
 
     /**
      * setter method for this books author list
+     * 
      * @param authorList the new lsit of this books authors
      */
     public void setAuthorList(List<Author> authorList) {
